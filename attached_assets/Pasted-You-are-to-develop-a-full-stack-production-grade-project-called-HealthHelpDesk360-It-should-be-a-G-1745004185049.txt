@@ -1,0 +1,130 @@
+You are to develop a full-stack, production-grade project called HealthHelpDesk360. It should be a GitHub-ready application with the following requirements and architecture. This project will showcase enterprise-level architecture, including a RAG-based chatbot and observability with OpenTelemetry.
+🧠 Functionality Overview:
+HealthHelpDesk360 is a smart helpdesk platform for healthcare systems (inspired by Optum). It includes:
+User interface for submitting support tickets
+RAG-based AI chatbot to guide users and log tickets
+Backend ticket management system with Kafka integration
+Observability with Prometheus, Grafana, and OpenTelemetry
+Full CI/CD + Docker + Kubernetes setup
+Azure cloud compatibility
+🧱 System Architecture (High-Level):
+Services:
+Frontend UI (React + Vite)
+Ticket Management Backend (Java Spring Boot)
+Chatbot Service (Python with RAG Pipeline)
+Kafka Event Processor (Java microservice)
+PostgreSQL – Ticket data
+MongoDB – Chat history + documents for RAG
+Redis – Session management
+Prometheus + Grafana – Monitoring
+OpenTelemetry Collector – Trace collection
+Azure Kubernetes – Deployment target
+CI/CD – GitHub Actions
+🔍 Use Case Flow:
+User lands on UI and can either:
+Submit ticket manually (using a form)
+Ask chatbot (e.g., “I’m having login issues”)
+Chatbot uses RAG to understand query and either:
+Answer directly using vector DB + docs
+Log a support ticket by calling Spring Boot API
+Ticket is stored in PostgreSQL
+Kafka is used to send events (for escalation, analytics)
+Observability: Every microservice emits traces using OpenTelemetry
+DevOps: Everything deploys via Docker and Kubernetes (local and Azure)
+🛠 Tech Stack by Layer:
+FRONTEND (React + Vite)
+TicketForm, TicketList, ChatbotWidget, Dashboard
+Styled using Optum-like theme (orange, teal, gray)
+Chat interface integrated with backend chatbot endpoint
+Axios for API calls
+React Router + Context API
+Unit testing with Vitest
+BACKEND (Spring Boot)
+REST API to manage:
+POST /tickets
+GET /tickets
+PUT /tickets/{id}
+Connect to PostgreSQL
+Publish Kafka events (ticket.created, ticket.escalated)
+OpenTelemetry instrumentation
+Unit testing with JUnit
+Swagger UI for API documentation
+CHATBOT (Python - FastAPI)
+Endpoint /chat accepts messages
+Uses RAG (e.g., LlamaIndex or LangChain) with local PDF/doc knowledge base
+Auto-logs ticket if needed via REST API call to ticket service
+Stores chat history in MongoDB
+OpenTelemetry integration
+PyTest for testing
+KAFKA SERVICE (Spring Boot or Node.js)
+Consumes ticket.created events
+Simulates auto-escalation or analytics logging
+DATABASES
+PostgreSQL (tickets schema)
+MongoDB (chat session + document store)
+Redis (for session caching / optional)
+OBSERVABILITY
+OpenTelemetry SDK in each microservice
+Collector sends to Prometheus
+Grafana dashboard to visualize traces/metrics
+📦 DevOps / Infra
+Docker
+Dockerfile for each microservice
+docker-compose.yml for local setup (DBs + services)
+Kubernetes
+Deployment YAMLs for all services
+Prometheus + Grafana as Helm charts or YAML
+OpenTelemetry Collector YAML
+Secrets via Kubernetes secrets
+Azure Setup
+Create ACR (Azure Container Registry)
+AKS cluster setup guide
+GitHub Actions for CI/CD pipeline:
+Lint → Test → Docker Build → Push to ACR → Deploy to AKS
+📄 File Structure (Scaffold)
+HealthHelpDesk360/
+├── frontend/ (Vite + React)
+│   ├── src/components/ChatbotWidget.jsx
+│   ├── src/components/TicketForm.jsx
+│   ├── src/pages/Dashboard.jsx
+│   ├── src/theme/optumTheme.css
+│   └── Dockerfile
+├── backend-ticket-service/
+│   ├── src/main/java/com/healthdesk/controller/TicketController.java
+│   ├── src/main/java/com/healthdesk/service/TicketService.java
+│   ├── src/main/resources/application.yml
+│   ├── Dockerfile
+│   └── pom.xml
+├── chatbot-service/
+│   ├── main.py
+│   ├── rag_pipeline.py
+│   ├── requirements.txt
+│   ├── Dockerfile
+├── kafka-consumer/
+│   ├── KafkaConsumerService.java
+│   ├── Dockerfile
+├── docker-compose.yml
+├── k8s/
+│   ├── backend-deployment.yaml
+│   ├── chatbot-deployment.yaml
+│   ├── kafka-deployment.yaml
+│   ├── redis.yaml
+│   ├── postgres.yaml
+│   ├── mongodb.yaml
+│   ├── otel-collector.yaml
+│   ├── prometheus.yaml
+│   ├── grafana.yaml
+├── .github/workflows/
+│   ├── ci-cd.yml
+├── README.md
+✅ Requirements:
+Fully working code for all layers and services
+No runtime or compile-time errors
+Basic unit test scaffold for each service
+GitHub Actions CI/CD setup
+Ready to deploy to Azure Kubernetes (AKS)
+Use Optum color theme (no logo)
+Chatbot flow must auto-create ticket if user query relates to known issues (e.g., “my claim is denied” → log a claim-related ticket)
+🎯 Goal:
+This should be a real-world GitHub project for a senior engineer portfolio with system design, full-stack coding, observability, and AI chatbot integration.
+Build this complete project and output the working repo code.
