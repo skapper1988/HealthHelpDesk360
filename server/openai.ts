@@ -142,11 +142,21 @@ Your goal is to resolve simple issues directly and escalate complex issues to hu
       createTicket,
       ticketData,
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("OpenAI API error:", error);
-    // Return a friendly error message
+    
+    // Check for quota exceeded error
+    if (error?.status === 429 && error?.error?.code === 'insufficient_quota') {
+      // Specific message for quota exceeded
+      return {
+        message: "I'm currently experiencing high demand. The system is using the basic keyword matching for now. For full AI capabilities, please update your OpenAI API key quota.",
+        createTicket: false,
+      };
+    }
+    
+    // Generic error message for other errors
     return {
-      message: "I'm having some trouble connecting to my knowledge base right now. Please try again in a moment.",
+      message: "I'm having some trouble connecting to my knowledge base right now. Falling back to basic matching.",
       createTicket: false,
     };
   }

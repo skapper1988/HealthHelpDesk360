@@ -30,7 +30,7 @@ export default function ChatbotWidget() {
   const sessionId = localStorage.getItem('chatSessionId') || 'default-session';
   
   // Fetch previous messages
-  const { data: messages = [] } = useQuery({
+  const { data: messages = [] } = useQuery<ChatMessage[]>({
     queryKey: [`/api/chat/${sessionId}`],
     refetchInterval: false,
   });
@@ -82,7 +82,7 @@ export default function ChatbotWidget() {
   
   // Initialize with a welcome message if there are no messages
   useEffect(() => {
-    if (messages.length === 0) {
+    if (messages && messages.length === 0) {
       sendMessageMutation.mutate("Hello");
     }
   }, [messages]);
@@ -175,7 +175,7 @@ export default function ChatbotWidget() {
         </CardHeader>
         
         <ScrollArea className="flex-1 p-4 bg-neutral-50" ref={scrollAreaRef}>
-          {messages.map((msg: ChatMessage, index: number) => (
+          {messages && messages.map((msg: ChatMessage, index: number) => (
             <div 
               key={index}
               className={`chat-message ${msg.sender === 'user' ? 'message-user' : 'message-agent'} max-w-[80%] mb-3 p-3 rounded-xl ${
