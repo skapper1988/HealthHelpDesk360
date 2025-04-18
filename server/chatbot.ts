@@ -11,10 +11,19 @@ export interface ChatbotResponse {
 // Process messages using OpenAI GPT with fallback to keyword matching
 export async function processMessage(message: string, sessionId: string): Promise<ChatbotResponse> {
   try {
-    // First attempt to use OpenAI for processing
-    return await processChatWithOpenAI(message, sessionId);
+    // First attempt to use OpenAI for processing with multi-key fallback
+    const response = await processChatWithOpenAI(message, sessionId);
+    
+    // If the response indicates we need to use keyword matching (when both API keys fail)
+    if (response.message.includes("using basic keyword matching") || 
+        response.message.includes("exceeded their quota limits")) {
+      console.log("All OpenAI API keys failed, using keyword matching as final fallback");
+      return keywordBasedProcessing(message);
+    }
+    
+    return response;
   } catch (error) {
-    console.error("Error using OpenAI, falling back to keyword matching:", error);
+    console.error("Unexpected error in OpenAI processing, falling back to keyword matching:", error);
     return keywordBasedProcessing(message);
   }
 }
